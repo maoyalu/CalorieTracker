@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/activity_horizontal_margin">
+
+    <ImageView
+        android:id="@+id/backgroundImg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:adjustViewBounds="true"
+        android:scaleType="fitStart"
+        android:src="@drawable/background" />
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/activity_horizontal_margin">
+
+        <TextView
+            android:id="@+id/welcomeMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="?attr/actionBarSize"
+            android:text="Hello, User!"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:shadowColor="@color/colorPrimary"
+            android:shadowRadius="5"
+            android:shadowDx="5"
+            android:shadowDy="2"/>
+
+        <TextClock
+            android:id="@+id/textClock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/welcomeMessage"
+            android:format12Hour="MMM dd, yyyy hh:mm:ss a"
+            android:gravity="center_horizontal"
+            android:textColor="@android:color/white"
+            android:textSize="36sp"
+            android:textStyle="bold"
+            android:shadowColor="@color/colorPrimary"
+            android:shadowRadius="5"
+            android:shadowDx="5"
+            android:shadowDy="5"/>
+
+        <TextView
+            android:id="@+id/calorieGoalText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="56dp"
+            android:layout_below="@+id/textClock"
+            android:text="Your Calorie Goal Today"
+            android:textStyle="bold"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/calorieGoalNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/calorieGoalText"
+            android:layout_marginTop="16dp"
+            android:text="@string/calorie_goal_today"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="50sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/calorieGoalEditButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@+id/calorieGoalNumber"
+            android:text="@string/button_edit" />
+
+        <EditText
+            android:id="@+id/editCalorieGoalNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/calorieGoalText"
+            android:layout_marginTop="16dp"
+            android:hint="@string/calorie_goal_today"
+            android:inputType="number"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:visibility="invisible"
+            android:textSize="50sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/calorieGoalSetButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@+id/editCalorieGoalNumber"
+            android:text="@string/button_ok" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

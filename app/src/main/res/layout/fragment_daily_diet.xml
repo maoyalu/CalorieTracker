@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/activity_horizontal_margin">
+
+    <TextView
+        android:id="@+id/categoryText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:ems="10"
+        android:textSize="18sp"
+        android:text="@string/category" />
+
+    <Spinner
+        android:id="@+id/categorySpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/categoryText"
+        android:layout_marginTop="16dp"/>
+
+    <TextView
+        android:id="@+id/foodText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_below="@+id/categorySpinner"
+        android:ems="10"
+        android:textSize="18sp"
+        android:text="@string/food" />
+
+    <Spinner
+        android:id="@+id/foodSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/foodText"
+        android:layout_marginTop="16dp"/>
+
+    <TextView
+        android:id="@+id/servingLabel"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/foodSpinner"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:textSize="18sp"
+        android:text="@string/serving"/>
+
+    <TextView
+        android:id="@+id/servingText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/servingLabel"
+        android:layout_alignBottom="@+id/servingLabel"
+        android:ems="10"
+        android:textSize="18sp"/>
+
+    <EditText
+        android:id="@+id/foodQuantity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/servingLabel"
+        android:layout_marginTop="16dp"
+        android:hint="@string/quantity"
+        android:inputType="number"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/foodAddButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignBottom="@+id/foodQuantity"
+        android:text="@string/button_add"/>
+
+</RelativeLayout>
