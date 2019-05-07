@@ -51,6 +51,7 @@
     <string name="signup_error_empty_steps">Steps is empty!</string>
     <string name="signup_error_empty_address">Address is empty!</string>
     <string name="signup_error_empty_postcode">Postcode is empty!</string>
+    <string name="signup_error_empty_username">Username is empty!</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
