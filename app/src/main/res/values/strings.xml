@@ -33,9 +33,24 @@
     <string name="button_add">Add</string>
     <string name="serving">Serving</string>>
 
+    <string name="signup_success">Signup succeeded!</string>
+
     <string name="login_error">Username or Password is incorrect!</string>
     <string name="login_error_empty_username">Username is empty!</string>
     <string name="login_error_empty_password">Password is empty!</string>
+    <string name="signup_error_empty_firstname">First Name is empty!</string>
+    <string name="signup_error_empty_lastname">Last Name is empty!</string>
+    <string name="signup_error_empty_email">Email is empty!</string>
+    <string name="signup_error_invalid_email">Email is invalid!</string>
+    <string name="signup_error_empty_password">Password is empty!</string>
+    <string name="signup_error_unmatch_password">Password doesn\'t match!</string>
+    <string name="signup_error_empty_dob">Date of Birth is empty!</string>
+    <string name="signup_error_empty_height">Height is empty!</string>
+    <string name="signup_error_empty_weight">Weight is empty!</string>
+    <string name="signup_error_empty_gender">Gender isn\'t selected!</string>
+    <string name="signup_error_empty_steps">Steps is empty!</string>
+    <string name="signup_error_empty_address">Address is empty!</string>
+    <string name="signup_error_empty_postcode">Postcode is empty!</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
