@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.DateFormat;
@@ -130,6 +132,16 @@ public class SignupFragment extends Fragment {
                 }
 
                 else {
+                    // ********* Delete after test ************
+
+                    TextView test = (TextView) vSignup.findViewById(R.id.test);
+                    test.setText(usr);
+
+
+                    // ****************************************
+
+
+
                     Button selectedSex = (Button) vSignup.findViewById(genders.getCheckedRadioButtonId());
                     String sex = selectedSex.getText().toString();
                     SignupAsyncTask signup = new SignupAsyncTask();
@@ -144,46 +156,33 @@ public class SignupFragment extends Fragment {
     private class SignupAsyncTask extends AsyncTask<String, Void, Boolean>{
         @Override
         protected Boolean doInBackground(String...params){
+            if(!RestClient.isUsernameExist(params[11])){
+                try{
+                    Integer id = RestClient.getNextUserId();
+                    String name = params[0];
+                    String surname = params[1];
+                    String eml = params[2];
+                    Date db = new SimpleDateFormat("MMM d, yyyy").parse(params[3]);
+                    double ht = Double.parseDouble(params[4]);
+                    double wt = Double.parseDouble(params[5]);
+                    Character sex = params[6].charAt(0);
+                    String addr = params[7];
+                    String code = params[8];
+                    int lvl = Integer.parseInt(params[9]);
+                    int stp = Integer.parseInt(params[10]);
 
-            if(false){
-//            if(firstName.getText().toString().equals("")){
-//                Toast.makeText(getActivity(), getString(R.string.signup_error_empty_firstname), Toast.LENGTH_LONG).show();
-//            } else if (lastName.getText().toString().equals("")){
-//                Toast.makeText(getActivity(), getString(R.string.signup_error_empty_lastname), Toast.LENGTH_LONG).show();
-//            } else if (email.getText().toString().equals("")){
-//                Toast.makeText(getActivity(), getString(R.string.signup_error_empty_email), Toast.LENGTH_LONG).show();
-//            } else if (!email.getText().toString().matches("[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+")){
-//                Toast.makeText(getActivity(), getString(R.string.signup_error_invalid_email), Toast.LENGTH_LONG).show();
-//            } else if (pwd.getText().toString().equals("")){
-//                Toast.makeText(getActivity(), getString(R.string.signup_error_empty_password), Toast.LENGTH_LONG).show();
-//            } else if (!pwd.getText().toString().equals(pwdConfirm.getText().toString())){
-//
-//                Toast.makeText(getActivity(), getString(R.string.signup_error_unmatch_password), Toast.LENGTH_LONG).show();
-//            } else if (dob.getText().toString().equals("")){
-//                Toast.makeText(getActivity(), getString(R.string.signup_error_empty_dob), Toast.LENGTH_LONG).show();
-//            } else if (height.getText().toString().equals("")){
-//                Toast.makeText(getActivity(), getString(R.string.signup_error_empty_height), Toast.LENGTH_LONG).show();
-//            } else if (weight.getText().toString().equals("")){
-//                Toast.makeText(getActivity(), getString(R.string.signup_error_empty_weight), Toast.LENGTH_LONG).show();
-//            } else if (genders.getCheckedRadioButtonId() == -1){
-//                Toast.makeText(getActivity(), getString(R.string.signup_error_empty_gender), Toast.LENGTH_LONG).show();
-//            } else if (steps.getText().toString().equals("")){
-//                Toast.makeText(getActivity(), getString(R.string.signup_error_empty_steps), Toast.LENGTH_LONG).show();
-//            } else if (address.getText().toString().equals("")){
-//                Toast.makeText(getActivity(), getString(R.string.signup_error_empty_address), Toast.LENGTH_LONG).show();
-//            } else if (postcode.getText().toString().equals("")){
-//                Toast.makeText(getActivity(), getString(R.string.signup_error_empty_postcode), Toast.LENGTH_LONG).show();
-            } else {
-    //                Toast.makeText(getActivity(), getString(R.string.signup_success), Toast.LENGTH_LONG).show();
-    //                FragmentManager fragmentManager = getFragmentManager();
-    //                fragmentManager.beginTransaction().replace(R.id.login_frame, new LoginFragment()).commit();
+                    Users user = new Users(id, name, surname, eml, db, ht, wt, sex, addr, code, lvl, stp);
+                    RestClient.createUser(user);
 
-    //            PostSignupAsyncTask signup = new PostSignupAsyncTask();
-    //            signup.execute();
-                return true;
+                    return true;
+                } catch (Exception e){
+                    return false;
+                }
             }
+
             return false;
         }
+
 
         @Override
         protected void onPostExecute(Boolean resultOk){
@@ -191,67 +190,18 @@ public class SignupFragment extends Fragment {
                 Toast.makeText(getActivity(), getString(R.string.signup_success), Toast.LENGTH_LONG).show();
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.login_frame, new LoginFragment()).commit();
+            } else {
+                EditText usr = (EditText) vSignup.findViewById(R.id.signupUsername);
+                usr.setText("");
+                Toast.makeText(getActivity(), getString(R.string.signup_error_invalid_username), Toast.LENGTH_LONG).show();
             }
 
         }
     }
 
-//    private boolean isValidFirstName(String firstname){
-//        if(firstname.equals("")){
-//            Toast.makeText(getActivity(), getString(R.string.signup_error_empty_firstname), Toast.LENGTH_LONG).show();
-//        }
-//    }
 
 
 
-//    private void signup(){
-//        EditText firstName = (EditText) vSignup.findViewById(R.id.signupFirstName);
-//        EditText lastName = (EditText) vSignup.findViewById(R.id.signupLastName);
-//        EditText email = (EditText) vSignup.findViewById(R.id.signupEmail);
-//        EditText pwd = (EditText) vSignup.findViewById(R.id.signupPassword);
-//        EditText pwdConfirm = (EditText) vSignup.findViewById(R.id.signupPasswordConfirm);
-//        EditText dob = (EditText) vSignup.findViewById(R.id.signupDob);
-//        EditText height = (EditText) vSignup.findViewById(R.id.signupHeight);
-//        EditText weight = (EditText) vSignup.findViewById(R.id.signupWeight);
-//        RadioGroup genders = (RadioGroup) vSignup.findViewById(R.id.signupGenderGroup);
-//        RadioButton selectedGender;
-//        Spinner activityLevel = (Spinner) vSignup.findViewById(R.id.activityLevelSpinner);
-//        EditText steps = (EditText) vSignup.findViewById(R.id.signupStepsPerMile);
-//        EditText address = (EditText) vSignup.findViewById(R.id.signupAddress);
-//        EditText postcode = (EditText) vSignup.findViewById(R.id.signupPostcode);
-//
-//        if(firstName.getText().toString().equals("")){
-//            Toast.makeText(getActivity(), getString(R.string.signup_error_empty_firstname), Toast.LENGTH_LONG).show();
-//        } else if (lastName.getText().toString().equals("")){
-//            Toast.makeText(getActivity(), getString(R.string.signup_error_empty_lastname), Toast.LENGTH_LONG).show();
-//        } else if (email.getText().toString().equals("")){
-//            Toast.makeText(getActivity(), getString(R.string.signup_error_empty_email), Toast.LENGTH_LONG).show();
-//        } else if (!email.getText().toString().matches("[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+")){
-//            Toast.makeText(getActivity(), getString(R.string.signup_error_invalid_email), Toast.LENGTH_LONG).show();
-//        } else if (pwd.getText().toString().equals("")){
-//            Toast.makeText(getActivity(), getString(R.string.signup_error_empty_password), Toast.LENGTH_LONG).show();
-//        } else if (!pwd.getText().toString().equals(pwdConfirm.getText().toString())){
-//
-//            Toast.makeText(getActivity(), getString(R.string.signup_error_unmatch_password), Toast.LENGTH_LONG).show();
-//        } else if (dob.getText().toString().equals("")){
-//            Toast.makeText(getActivity(), getString(R.string.signup_error_empty_dob), Toast.LENGTH_LONG).show();
-//        } else if (height.getText().toString().equals("")){
-//            Toast.makeText(getActivity(), getString(R.string.signup_error_empty_height), Toast.LENGTH_LONG).show();
-//        } else if (weight.getText().toString().equals("")){
-//            Toast.makeText(getActivity(), getString(R.string.signup_error_empty_weight), Toast.LENGTH_LONG).show();
-//        } else if (genders.getCheckedRadioButtonId() == -1){
-//            Toast.makeText(getActivity(), getString(R.string.signup_error_empty_gender), Toast.LENGTH_LONG).show();
-//        } else if (steps.getText().toString().equals("")){
-//            Toast.makeText(getActivity(), getString(R.string.signup_error_empty_steps), Toast.LENGTH_LONG).show();
-//        } else if (address.getText().toString().equals("")){
-//            Toast.makeText(getActivity(), getString(R.string.signup_error_empty_address), Toast.LENGTH_LONG).show();
-//        } else if (postcode.getText().toString().equals("")){
-//            Toast.makeText(getActivity(), getString(R.string.signup_error_empty_postcode), Toast.LENGTH_LONG).show();
-//        } else {
-//                Toast.makeText(getActivity(), getString(R.string.signup_success), Toast.LENGTH_LONG).show();
-//                FragmentManager fragmentManager = getFragmentManager();
-//                fragmentManager.beginTransaction().replace(R.id.login_frame, new LoginFragment()).commit();
-//
 ////            PostSignupAsyncTask signup = new PostSignupAsyncTask();
 ////            signup.execute();
 //        }

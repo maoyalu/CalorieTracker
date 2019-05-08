@@ -2,7 +2,7 @@ package com.example.trackerapp;
 
 import java.util.Date;
 
-public class User {
+public class Users {
     private Integer userId;
     private String name;
     private String surname;
@@ -16,7 +16,7 @@ public class User {
     private int levelOfActivity;
     private int stepsPerMile;
 
-    public User(Integer userId, String name, String surname, String email, Date dob, double height, double weight,
+    public Users(Integer userId, String name, String surname, String email, Date dob, double height, double weight,
                 Character gender, String address, String postcode, int levelOfActivity, int stepsPerMile){
         this.userId = userId;
         this.name = name;
@@ -32,7 +32,7 @@ public class User {
         this.stepsPerMile = stepsPerMile;
     }
 
-    public User(){}
+    public Users(){}
 
     public Integer getUserId(){
         return userId;
