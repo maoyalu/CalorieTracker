@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity
                 nextFragment = new ReportFragment();
                 break;
             case R.id.nav_map:
-                nextFragment = new MapFragment();
+                nextFragment = new MapsFragment();
                 break;
         }
 

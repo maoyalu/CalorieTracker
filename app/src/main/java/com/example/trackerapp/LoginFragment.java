@@ -6,15 +6,21 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v7.widget.AppCompatCheckBox;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 
 public class LoginFragment extends Fragment {
     View vLogin;
@@ -36,6 +42,20 @@ public class LoginFragment extends Fragment {
 
         final EditText username = (EditText) vLogin.findViewById(R.id.loginUsername);
         final EditText password = (EditText) vLogin.findViewById(R.id.loginPassword);
+
+        AppCompatCheckBox checkbox = (AppCompatCheckBox) vLogin.findViewById(R.id.showPassword);
+        checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                } else {
+                    password.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                }
+            }
+        });
+
+
         Button loginButton = (Button) vLogin.findViewById(R.id.loginButton);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,14 +82,37 @@ public class LoginFragment extends Fragment {
 
         @Override
         protected String doInBackground(String...params){
-            return RestClient.AuthenticateUser(params[0], params[1]);
+            String usr = params[0];
+            String pw = "";
+            try{
+                pw = LoginActivity.passwordHash(params[1]);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+            Log.i("passwordHash: ", pw);
+            return RestClient.AuthenticateUser(usr, pw);
         }
 
         @Override
         protected void onPostExecute(String result){
             if (!result.equals("[]")){
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                startActivity(intent);
+
+                try{
+                    JSONArray userJson = new JSONArray(result);
+                    JSONObject user = userJson.getJSONObject(0).getJSONObject("userId");
+
+                    int id = user.getInt("userId");
+                    String name = user.getString("name");
+
+                    SessionManagement session = new SessionManagement(getContext());
+                    session.createLoginSession(id, name);
+
+                    Intent intent = new Intent(getActivity(), MainActivity.class);
+                    startActivity(intent);
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+
             } else {
                 clearLoginUsernameAndPassword();
                 Toast.makeText(getActivity(), getString(R.string.login_error), Toast.LENGTH_LONG).show();

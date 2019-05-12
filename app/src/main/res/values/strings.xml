@@ -31,9 +31,11 @@
     <string name="food">Food</string>
     <string name="quantity">Quantity</string>
     <string name="button_add">Add</string>
-    <string name="serving">Serving</string>>
+    <string name="serving">Serving</string>
+    <string name="showPassword">Show Password</string>
 
     <string name="signup_success">Signup succeeded!</string>
+    <string name="add_consumption_success">Consumption added!</string>
 
     <string name="login_error">Username or Password is incorrect!</string>
     <string name="login_error_empty_username">Username is empty!</string>
@@ -52,7 +54,9 @@
     <string name="signup_error_empty_address">Address is empty!</string>
     <string name="signup_error_empty_postcode">Postcode is empty!</string>
     <string name="signup_error_empty_username">Username is empty!</string>
-    <string name="signup_error_invalid_username">Username exists!</string>
+    <string name="signup_error_exist_username">Username exists!</string>
+    <string name="signup_error_exist_email">Email exists!</string>
+    <string name="add_food_error_empty_qty">Quantity is empty!</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

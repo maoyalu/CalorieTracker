@@ -26,11 +26,19 @@
         android:inputType="textPassword"
         android:textAlignment="viewStart" />
 
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/showPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/loginPassword"
+        android:layout_marginTop="16dp"
+        android:text="@string/showPassword" />
+
     <Button
         android:id="@+id/loginButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/loginPassword"
+        android:layout_below="@+id/showPassword"
         android:layout_alignParentStart="true"
         android:layout_marginStart="30dp"
         android:layout_marginTop="30dp"
@@ -40,7 +48,7 @@
         android:id="@+id/signupButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/loginPassword"
+        android:layout_below="@+id/showPassword"
         android:layout_marginTop="30dp"
         android:layout_marginLeft="30dp"
         android:layout_toRightOf="@+id/loginButton"

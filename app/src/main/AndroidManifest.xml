@@ -3,6 +3,7 @@
     package="com.example.trackerapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -12,6 +13,22 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+
+        <uses-library
+            android:name="com.google.android.maps"
+            android:required="true" />
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyA23KJ7HRKHjKkwrdu22Dv_nsClNgcH6lQ" />
+
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login">
@@ -26,5 +43,7 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
+
+
 
 </manifest>

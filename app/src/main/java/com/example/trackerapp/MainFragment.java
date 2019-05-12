@@ -3,6 +3,7 @@ package com.example.trackerapp;
 import android.app.Activity;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,13 @@ public class MainFragment extends Fragment {
         final EditText editGoal = (EditText) vMain.findViewById(R.id.editCalorieGoalNumber);
         final Button editGoalButton = (Button) vMain.findViewById(R.id.calorieGoalEditButton);
         final Button setGoalButton = (Button) vMain.findViewById(R.id.calorieGoalSetButton);
+
+        SessionManagement session = new SessionManagement(getContext());
+
+        TextView welcome = (TextView) vMain.findViewById(R.id.welcomeMessage);
+        String newText = "Welcome, " + session.getCurrentUserFirstName() + "!";
+
+        welcome.setText(newText);
 
         editGoalButton.setOnClickListener(new View.OnClickListener() {
             @Override

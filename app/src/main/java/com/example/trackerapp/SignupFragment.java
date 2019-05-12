@@ -107,7 +107,7 @@ public class SignupFragment extends Fragment {
                     Toast.makeText(getActivity(), getString(R.string.signup_error_empty_lastname), Toast.LENGTH_LONG).show();
                 } else if (eml.equals("")){
                     Toast.makeText(getActivity(), getString(R.string.signup_error_empty_email), Toast.LENGTH_LONG).show();
-                } else if (!eml.matches("[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+")){
+                } else if (!eml.matches("[a-zA-Z0-9._-]+@[a-z]+[\\.+[a-z]+]+")){
                     Toast.makeText(getActivity(), getString(R.string.signup_error_invalid_email), Toast.LENGTH_LONG).show();
                 } else if (usr.equals("")){
                     Toast.makeText(getActivity(), getString(R.string.signup_error_empty_username), Toast.LENGTH_LONG).show();
@@ -132,16 +132,6 @@ public class SignupFragment extends Fragment {
                 }
 
                 else {
-                    // ********* Delete after test ************
-
-                    TextView test = (TextView) vSignup.findViewById(R.id.test);
-                    test.setText(usr);
-
-
-                    // ****************************************
-
-
-
                     Button selectedSex = (Button) vSignup.findViewById(genders.getCheckedRadioButtonId());
                     String sex = selectedSex.getText().toString();
                     SignupAsyncTask signup = new SignupAsyncTask();
@@ -153,105 +143,81 @@ public class SignupFragment extends Fragment {
         return vSignup;
     }
 
-    private class SignupAsyncTask extends AsyncTask<String, Void, Boolean>{
+    private class SignupAsyncTask extends AsyncTask<String, Void, Integer>{
         @Override
-        protected Boolean doInBackground(String...params){
+        protected Integer doInBackground(String...params){
+            final Integer RESULT_OK = 0;
+            final Integer RESULT_EMAIL_EXIST = 1;
+            final Integer RESULT_USERNAME_EXIST = 2;
+
+
             if(!RestClient.isUsernameExist(params[11])){
-                try{
-                    Integer id = RestClient.getNextUserId();
-                    String name = params[0];
-                    String surname = params[1];
-                    String eml = params[2];
-                    Date db = new SimpleDateFormat("MMM d, yyyy").parse(params[3]);
-                    double ht = Double.parseDouble(params[4]);
-                    double wt = Double.parseDouble(params[5]);
-                    Character sex = params[6].charAt(0);
-                    String addr = params[7];
-                    String code = params[8];
-                    int lvl = Integer.parseInt(params[9]);
-                    int stp = Integer.parseInt(params[10]);
+                if(!RestClient.isEmailExist(params[2])){
+                    try{
+                        Integer id = RestClient.getNextUserId();
+                        String name = params[0];
+                        String surname = params[1];
+                        String eml = params[2];
+                        Date db = new SimpleDateFormat("MMM d, yyyy").parse(params[3]);
+                        double ht = Double.parseDouble(params[4]);
+                        double wt = Double.parseDouble(params[5]);
+                        Character sex = params[6].charAt(0);
+                        String addr = params[7];
+                        String code = params[8];
+                        int lvl = Integer.parseInt(params[9]);
+                        int stp = Integer.parseInt(params[10]);
+                        String usrname = params[11];
+                        String pw = LoginActivity.passwordHash(params[12]);
 
-                    Users user = new Users(id, name, surname, eml, db, ht, wt, sex, addr, code, lvl, stp);
-                    RestClient.createUser(user);
+                        Users user = new Users(id, name, surname, eml, db, ht, wt, sex, addr, code, lvl, stp);
+                        RestClient.createUser(user);
 
-                    return true;
-                } catch (Exception e){
-                    return false;
+                        Credential c = new Credential(id, usrname, pw, user);
+                        RestClient.createCredential(c);
+
+                        return RESULT_OK;
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
+                } else {
+                    return RESULT_EMAIL_EXIST;
                 }
             }
-
-            return false;
+            return RESULT_USERNAME_EXIST;
         }
 
 
         @Override
-        protected void onPostExecute(Boolean resultOk){
-            if(resultOk){
-                Toast.makeText(getActivity(), getString(R.string.signup_success), Toast.LENGTH_LONG).show();
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.login_frame, new LoginFragment()).commit();
-            } else {
-                EditText usr = (EditText) vSignup.findViewById(R.id.signupUsername);
-                usr.setText("");
-                Toast.makeText(getActivity(), getString(R.string.signup_error_invalid_username), Toast.LENGTH_LONG).show();
+        protected void onPostExecute(Integer result){
+            switch (result){
+
+                // RESULT_OK
+                case 0:
+                    Toast.makeText(getActivity(), getString(R.string.signup_success), Toast.LENGTH_LONG).show();
+                    FragmentManager fragmentManager = getFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.login_frame, new LoginFragment()).commit();
+                    break;
+
+                // RESULT_EMAIL_EXIST
+                case 1:
+                    EditText eml = (EditText) vSignup.findViewById(R.id.signupEmail);
+                    eml.setText("");
+                    Toast.makeText(getActivity(), getString(R.string.signup_error_exist_email), Toast.LENGTH_LONG).show();
+                    break;
+
+                // RESULT_USER_EXIST
+                case 2:
+                    EditText usr = (EditText) vSignup.findViewById(R.id.signupUsername);
+                    usr.setText("");
+                    Toast.makeText(getActivity(), getString(R.string.signup_error_exist_username), Toast.LENGTH_LONG).show();
+                    break;
+
+                default:
+
+
             }
 
         }
     }
-
-
-
-
-////            PostSignupAsyncTask signup = new PostSignupAsyncTask();
-////            signup.execute();
-//        }
-//    }
-
-//    private class PostSignupAsyncTask extends AsyncTask<Void, Void, String>{
-//        @Override
-//        protected String doInBackground(Void...params){
-//            GetIdAsyncTask getId = new GetIdAsyncTask();
-//            getId.execute();
-//            return getString(R.string.signup_success);
-//        }
-//
-//        @Override
-//        protected void onPostExecute(String result) {
-//            Toast.makeText(getActivity(), result, Toast.LENGTH_LONG).show();
-//            FragmentManager fragmentManager = getFragmentManager();
-//            fragmentManager.beginTransaction().replace(R.id.login_frame, new LoginFragment()).commit();
-//        }
-//    }
-
-//    private class GetIdAsyncTask extends  AsyncTask<Void, Void, Integer>{
-//        @Override
-//        protected Integer doInBackground(Void...params){
-//            return RestClient.getNextUserId();
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Integer nextId){
-//            try{
-//                String name = firstName.getText().toString();
-//                String surname = lastName.getText().toString();
-//                String eml = email.getText().toString();
-//                Date db = new SimpleDateFormat("MMM dd, yyyy").parse(dob.getText().toString());
-//                double ht = Double.parseDouble(height.getText().toString());
-//                double wt = Double.parseDouble(weight.getText().toString());
-//                Character sex = selectedGender.getText().toString().charAt(0);
-//                String addr = address.getText().toString();
-//                String code = postcode.getText().toString();
-//                int lvl = Integer.parseInt(levelOfActivity.getSelectedItem().toString());
-//                int stp = Integer.parseInt(steps.getText().toString());
-//
-//                User user = new User(nextId, name, surname, eml, db, ht, wt, sex, addr, code, lvl, stp);
-//                RestClient.createUser(user);
-//            } catch (Exception e){
-//                //
-//            }
-//
-//        }
-//
-//    }
 
 }
