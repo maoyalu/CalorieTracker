@@ -3,6 +3,7 @@ package com.example.trackerapp;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,6 +76,15 @@ public class DailyDietFragment extends Fragment {
                 } else {
                     Toast.makeText(getActivity(), getString(R.string.add_food_error_empty_qty), Toast.LENGTH_LONG).show();
                 }
+            }
+        });
+
+        Button findButton = (Button) vDailyDiet.findViewById(R.id.foodFindButton);
+        findButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.content_frame, new FoodFragment()).commit();
             }
         });
 

@@ -32,7 +32,9 @@
     <string name="quantity">Quantity</string>
     <string name="button_add">Add</string>
     <string name="serving">Serving</string>
-    <string name="showPassword">Show Password</string>
+    <string name="show_password">Show Password</string>
+    <string name="button_find_food">Find More Food</string>
+    <string name="search_food_hint">Search new food here...</string>
 
     <string name="signup_success">Signup succeeded!</string>
     <string name="add_consumption_success">Consumption added!</string>
@@ -73,4 +75,5 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="title_activity_searchable">SearchableActivity</string>
 </resources>

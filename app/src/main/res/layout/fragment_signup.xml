@@ -196,11 +196,5 @@
         android:layout_marginLeft="16dp"
         android:text="@string/button_signup" />
 
-    <TextView
-        android:id="@+id/test"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/signupConfirmButton"
-        android:text="TEST!!!!" />
 
 </RelativeLayout>

@@ -24,26 +24,31 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyA23KJ7HRKHjKkwrdu22Dv_nsClNgcH6lQ" />
 
+        <meta-data
+            android:name="com.edamam.food.APP_ID"
+            android:value="c21f2302" />
+
+        <meta-data
+            android:name="com.edamam.food.API_KEY"
+            android:value="07dc7c6683a4a6e717e1da36a3a6b1c5" />
+
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
-
-
 
 </manifest>

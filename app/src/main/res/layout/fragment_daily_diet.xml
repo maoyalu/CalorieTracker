@@ -74,4 +74,12 @@
         android:layout_alignBottom="@+id/foodQuantity"
         android:text="@string/button_add"/>
 
+    <Button
+        android:id="@+id/foodFindButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/foodAddButton"
+        android:layout_marginTop="16dp"
+        android:text="@string/button_find_food" />
+
 </RelativeLayout>
