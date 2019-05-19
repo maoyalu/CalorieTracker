@@ -4,10 +4,28 @@
     android:layout_height="match_parent"
     android:padding="@dimen/activity_horizontal_margin">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <EditText
+        android:id="@+id/steps_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="?attr/actionBarSize"
-        android:text="Steps Screen" />
+        android:hint="@string/steps"
+        android:inputType="number"  />
+
+    <Button
+        android:id="@+id/steps_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_add"
+        android:layout_toRightOf="@+id/steps_number"
+        android:layout_alignBottom="@+id/steps_number"
+        android:layout_marginLeft="16dp" />
+
+    <ListView
+        android:id="@+id/steps_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/steps_number"
+        android:layout_marginTop="16dp" />
 
 </RelativeLayout>

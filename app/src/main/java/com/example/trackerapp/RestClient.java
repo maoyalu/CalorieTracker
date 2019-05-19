@@ -6,17 +6,21 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 
 public class RestClient {
-    final static String BASE_URL = "http://192.168.0.172:8080/CalorieTracker/webresources/";
+    final static String BASE_URL = "http://192.168.0.32:8080/CalorieTracker/webresources/";
 
 
     // GET
@@ -33,6 +37,11 @@ public class RestClient {
         return getRestMethod(BASE_URL + methodPath, type).equals("1");
     }
 
+    public static Integer getNextFoodId(){
+        final String methodPath = "calorie.food/count";
+        final String type = "text/plain";
+        return Integer.parseInt(getRestMethod(BASE_URL + methodPath, type)) + 1;
+    }
 
     // GET
     public static String findFoodByCategory(String category){
@@ -87,10 +96,79 @@ public class RestClient {
     }
 
     // GET
+    public static double getTotalCaloriesPerStep(Integer userId){
+        final String methodPath = "calorie.users/getCaloriesBurnedPerStep/" + userId;
+        final String type = "application/json";
+        return Double.parseDouble(getRestMethod(BASE_URL + methodPath, type));
+    }
+
+    // GET
+    public static double getCaloriesBurnedAtRest(Integer userId){
+        final String methodPath = "calorie.users/getTotalDailyCaloriesBurnedAtRest/" + userId;
+        final String type = "application/json";
+        return Double.parseDouble(getRestMethod(BASE_URL + methodPath, type));
+    }
+
+    // GET
     public static Integer getNextConsumptionId(){
         final String methodPath = "calorie.consumption/count";
         final String type = "text/plain";
         return Integer.parseInt(getRestMethod(BASE_URL + methodPath, type)) + 1;
+    }
+
+    // GET
+    public static String getTotalCaloriesConsumed(Integer userId){
+        String date = new SimpleDateFormat("MM-dd-yyyy").format(new Date());
+        final String methodPath = "calorie.consumption/getTotalCaloriesConsumedByUserIdAndDate/" + userId + "/" + date;
+        final String type = "application/json";
+        return getRestMethod(BASE_URL + methodPath, type);
+    }
+
+    // GET
+    public static Integer getNextReportId(){
+        final String methodPath = "calorie.report/count";
+        final String type = "text/plain";
+        return Integer.parseInt(getRestMethod(BASE_URL + methodPath, type)) + 1;
+    }
+
+    // GET
+    public static Report getReportByIdAndDate(Integer userId, Date date){
+        String reportDate = new SimpleDateFormat("MM-dd-yyyy").format(date);
+        final String methodPath = "calorie.report/getCaloriesInfoByUserIdAndDate/" + userId + "/" + reportDate;
+        final String type = "application/json";
+        String reportJson = RestClient.getRestMethod(BASE_URL + methodPath, type);
+        if(!reportJson.equals("[]")){
+            try{
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX").create();
+                return gson.fromJson(reportJson, Report.class);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public static List<Report> getReportByIdAndPeriod(Integer userId, Date start, Date end){
+        String startDate = new SimpleDateFormat("MM-dd-yyyy").format(start);
+        String endDate = new SimpleDateFormat("MM-dd-yyyy").format(end);
+        final String methodPath = "calorie.report/getCaloriesInfoByUserIdAndPeriod/" + userId + "/" + startDate + "/" + endDate;
+        final String type = "application/json";
+        String reportsJson = RestClient.getRestMethod(BASE_URL + methodPath, type);
+        List<Report> reports = new ArrayList<>();
+        try{
+            JSONArray reportArray = new JSONArray(reportsJson);
+            for(int i = 0; i < reportArray.length(); i++){
+                JSONObject reportObj = reportArray.getJSONObject(i);
+                String json = reportObj.toString();
+                Log.i("Result: ", json);
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX").create();
+                reports.add(gson.fromJson(json, Report.class));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return reports;
+
     }
 
     // POST
@@ -110,11 +188,26 @@ public class RestClient {
     }
 
     // POST
+    public static void createFood(Food food){
+        final String methodPath = "calorie.food/";
+        Gson gson = new Gson();
+        String stringFoodJson = gson.toJson(food);
+        postRestMethod(BASE_URL + methodPath, stringFoodJson);
+    }
+
+    // POST
+    public static void createReport(Report report){
+        final String methodPath = "calorie.report/";
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX").create();
+        String stringReportJson = gson.toJson(report);
+        postRestMethod(BASE_URL + methodPath, stringReportJson);
+    }
+
+    // POST
     public static void createConsumption(Consumption c){
         final String methodPath = "calorie.consumption/";
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX").create();
         String stringConsumptionJson = gson.toJson(c);
-        Log.i("generated: ", stringConsumptionJson);
         postRestMethod(BASE_URL + methodPath, stringConsumptionJson);
     }
 

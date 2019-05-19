@@ -1,5 +1,6 @@
 package com.example.trackerapp;
 
+import android.app.FragmentManager;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.media.Image;
@@ -12,11 +13,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.squareup.picasso.Picasso;
@@ -30,6 +33,8 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -47,6 +52,9 @@ public class FoodFragment extends Fragment{
                 SearchFoodAsyncTask searchTask = new SearchFoodAsyncTask();
                 searchTask.execute(query);
 
+                SearchInfoAsyncTask searchInfoAsyncTask = new SearchInfoAsyncTask();
+                searchInfoAsyncTask.execute(query);
+
                 searchView.clearFocus();
                 searchView.setQuery("", false);
                 return true;
@@ -57,14 +65,6 @@ public class FoodFragment extends Fragment{
                 return false;
             }
         });
-
-//        ListView resultList = (ListView) vFood.findViewById(R.id.food_list_view);
-//        List<String> data = new ArrayList<String>();
-//        data.add("food 1");
-//        data.add("food 2");
-//        data.add("food 3");
-//        ArrayAdapter adapter = new ArrayAdapter<String>(getContext(), R.layout.food_listview, data);
-//        resultList.setAdapter(adapter);
 
         return vFood;
     }
@@ -118,16 +118,15 @@ public class FoodFragment extends Fragment{
         protected void onPostExecute(String result){
             try{
 
-
                 JSONObject resultObject = new JSONObject(result);
                 JSONObject foodObject = resultObject.getJSONArray("parsed").getJSONObject(0).getJSONObject("food");
 
-                String name = foodObject.getString("label");
-                String category = foodObject.getString("category");
-                double calorie = foodObject.getJSONObject("nutrients").getDouble("ENERC_KCAL");
-                String unit = "gram";
-                double amount = 100;
-                double fat = foodObject.getJSONObject("nutrients").getDouble("FAT");
+                final String name = foodObject.getString("label");
+                final String category = foodObject.getString("category");
+                final double calorie = foodObject.getJSONObject("nutrients").getDouble("ENERC_KCAL");
+                final String unit = "gram";
+                final double amount = 100;
+                final double fat = foodObject.getJSONObject("nutrients").getDouble("FAT");
 
                 String img = foodObject.getString("image");
                 ImageView imgView = (ImageView) vFood.findViewById(R.id.food_img);
@@ -153,16 +152,90 @@ public class FoodFragment extends Fragment{
                 String fatStr = "Fat: " + fat + " g";
                 fatText.setText(fatStr);
 
-                TextView descripText = (TextView) vFood.findViewById(R.id.food_description);
-//                String
-                descripText.setText("Description: ");
+                final EditText qtyText = (EditText) vFood.findViewById(R.id.food_quantity);
+                qtyText.setVisibility(View.VISIBLE);
 
                 Button addButton = (Button) vFood.findViewById(R.id.food_add);
                 addButton.setVisibility(View.VISIBLE);
+                addButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String qty = qtyText.getText().toString();
+                        if(!qty.equals("")){
+                            AddFoodAsyncTask addTask = new AddFoodAsyncTask();
+                            String newCat = "other";
+                            List<String> catagories = Arrays.asList("Drink", "Meal", "Meat", "Snack",
+                                    "Bread", "Cake", "Fruit", "Vegetable", "Dessert");
+                            if(catagories.contains(category)){
+                                newCat = category.toLowerCase();
+                            }
+
+                            SessionManagement session = new SessionManagement(getContext());
+                            String userId = Integer.toString(session.getCurrentUserId());
+
+                            addTask.execute(name, newCat, Double.toString(calorie), unit, Double.toString(amount),
+                                    Double.toString(fat), qty, userId);
+                        } else {
+                            Toast.makeText(getActivity(), getString(R.string.add_food_error_empty_qty), Toast.LENGTH_LONG).show();
+                        }
+
+                    }
+                });
 
             } catch (Exception e){
                 e.printStackTrace();
             }
+        }
+    }
+
+    private class AddFoodAsyncTask extends AsyncTask<String, Void, Void>{
+
+        @Override
+        protected Void doInBackground(String... params) {
+            Integer id = RestClient.getNextFoodId();
+            String name = params[0];
+            String category = params[1];
+            double calorie = Double.parseDouble(params[2]);
+            String unit = params[3];
+            double serving = Double.parseDouble(params[4]);
+            double fat = Double.parseDouble(params[5]);
+            Food food = new Food(id, name, category, calorie, unit, serving, fat);
+            RestClient.createFood(food);
+
+            Date date = new Date();
+            int qty = Integer.parseInt(params[6]);
+            int userId = Integer.parseInt(params[7]);
+            Users user = RestClient.findUserById(userId);
+
+            Consumption c = new Consumption(id, date, qty, food, user);
+            RestClient.createConsumption(c);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void v){
+            Toast.makeText(getActivity(), getString(R.string.add_consumption_success), Toast.LENGTH_LONG).show();
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, new DailyDietFragment()).commit();
+        }
+    }
+
+    private class SearchInfoAsyncTask extends AsyncTask<String, Void, String>{
+
+        @Override
+        protected String doInBackground(String... params) {
+            return GoogleSearchAPI.search(params[0], new String[]{"num"}, new String[]{"1"});
+        }
+
+        @Override
+        protected void onPostExecute(String result){
+            TextView descripText = (TextView) vFood.findViewById(R.id.food_description);
+            String descrip = GoogleSearchAPI.getSnippet(result);
+            descrip.replace(",", ":");
+            if (descrip.endsWith("...")){
+                descrip = descrip.substring(0, descrip.lastIndexOf(",")) + ".";
+            }
+            descripText.setText(descrip);
         }
     }
 

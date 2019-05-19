@@ -49,6 +49,9 @@
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <service
+            android:name=".ScheduledIntentService"
+            android:exported="false" />
     </application>
 
 </manifest>

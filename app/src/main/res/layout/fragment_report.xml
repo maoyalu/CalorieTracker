@@ -4,10 +4,72 @@
     android:layout_height="match_parent"
     android:padding="@dimen/activity_horizontal_margin">
 
-    <TextView
+    <Button
+        android:id="@+id/pie_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/pie_button"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="?attr/actionBarSize"/>
+
+    <Button
+        android:id="@+id/bar_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/bar_button"
+        android:layout_toRightOf="@+id/pie_button"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="?attr/actionBarSize"/>
+
+    <Button
+        android:id="@+id/search_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/bar_button"
+        android:layout_alignBottom="@+id/bar_button"
+        android:layout_marginLeft="16dp"
+        android:text="@string/button_search" />
+
+
+    <EditText
+        android:id="@+id/start_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/pie_button"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="@string/start_date"
+        android:inputType="date"
+        android:focusableInTouchMode="false"
+        android:textAlignment="viewStart" />
+
+
+    <EditText
+        android:id="@+id/end_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/start_date"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="@string/end_date"
+        android:inputType="date"
+        android:focusableInTouchMode="false"
+        android:textAlignment="viewStart"
+        android:visibility="invisible"/>
+
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/pie_chart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:text="Report Screen" />
+        android:layout_below="@+id/start_date"
+        android:layout_marginTop="16dp" />
+
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/bar_chart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/end_date"
+        android:layout_marginTop="16dp"
+        android:visibility="invisible" />
 
 </RelativeLayout>
